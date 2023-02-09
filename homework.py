@@ -66,9 +66,9 @@ def get_api_answer(timestamp):
         ) from err
     if response.status_code != HTTPStatus.OK:
         error = (
-            f'Эндпоинт {ENDPOINT} недоступен.'
+            f'Неверный ответ сервера - код ответа: {response.status_code}'
             f'Причина: {response.reason}, {response.text}'
-            f'Код ответа: {response.status_code}'
+            'Параметры:', {**parameters}
         )
         raise HTTPStatusCodeError(error)
     return response.json()
@@ -132,12 +132,12 @@ def main():
             if homeworks:
                 message = parse_status(homeworks[0])
             else:
-                message = ('В ответе нет нового статуса')
+                message = f'Список ДЗ за период c {timestamp} пустой'
             if message != prev_message:
                 send_message(bot, message)
                 prev_message = message
             else:
-                logger.debug(f'Список ДЗ за период c {timestamp} пустой')
+                logger.debug('В ответе нет нового статуса')
             timestamp = response.get('current_date')
         except Exception as error:
             message = f'Сбой работы программы: {error}'
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     handler = logging.StreamHandler(sys.stdout)
     logger.addHandler(handler)
     formatter = logging.Formatter(
-        '%(asctime)s, %(lineno)d, %(name)s, %(lineno)d, %(message)s'
+        '%(asctime)s, %(lineno)d, %(name)s, %(message)s'
     )
     handler.setFormatter(formatter)
     main()
