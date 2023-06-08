@@ -37,3 +37,4 @@ pip install -r requirements.txt
 ```
 python homework.py
 ```
+Автор: [Федоренко Михаил](https://github.com/Mikhail2690/)
